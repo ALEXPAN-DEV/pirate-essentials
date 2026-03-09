@@ -1,5 +1,13 @@
 __pycache__/
-*.pyc
-logs/*.log
+*.py[cod]
+*$py.class
 .venv/
+venv/
+logs/
+*.log
 .vscode/
+.DS_Store
+Thumbs.db
+build/
+dist/
+*.egg-info/
