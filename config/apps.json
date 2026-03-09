@@ -1,7 +1,18 @@
 [
   {
     "name": "Git",
-    "install": ["winget", "install", "-e", "--id", "Git.Git", "--accept-source-agreements", "--accept-package-agreements"],
+    "install": [
+      "winget",
+      "install",
+      "--id",
+      "Git.Git",
+      "-e",
+      "--source",
+      "winget",
+      "--accept-package-agreements",
+      "--accept-source-agreements",
+      "--silent"
+    ],
     "verify": ["git", "--version"]
   }
 ]
