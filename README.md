@@ -1,3 +1,7 @@
+![License](https://img.shields.io/badge/license-MIT-green)
+![Python](https://img.shields.io/badge/python-3.x-blue)
+![Platform](https://img.shields.io/badge/platform-Windows-lightgrey)
+
 # 🏴‍☠️ Pirate Essentials
 
 **Pirate Essentials** is a bootstrap installer that prepares a Python development environment on Windows in a single command.
@@ -111,3 +115,11 @@ More info → Run anyway
 If you have questions or suggestions, open an issue or contact:
 
 https://github.com/ALEXPAN-DEV
+
+## Keywords
+
+python installer  
+development environment setup  
+windows bootstrap  
+python dev environment  
+cli installer
