@@ -3,6 +3,19 @@ setlocal EnableDelayedExpansion
 chcp 65001 >nul
 title Pirate Essentials
 
+call :check_internet
+if %errorlevel% neq 0 (
+    echo.
+    echo ========================================
+    echo No internet connection detected.
+    echo Please restore your internet connection.
+    echo ========================================
+    echo.
+    echo Press Enter to continue...
+    pause >nul
+    exit /b 1
+)
+
 call :find_python
 if defined PYTHON_EXE goto python_found
 
@@ -47,6 +60,12 @@ echo Starting Pirate Essentials...
 echo.
 pause
 exit /b 0
+
+
+:check_internet
+powershell -NoProfile -ExecutionPolicy Bypass -Command ^
+  "try { $r = Test-NetConnection -ComputerName 8.8.8.8 -Port 53 -WarningAction SilentlyContinue; if ($r.TcpTestSucceeded) { exit 0 } else { exit 1 } } catch { exit 1 }"
+exit /b %errorlevel%
 
 
 :find_python
