@@ -7,9 +7,9 @@ echo Checking Python...
 python --version >nul 2>nul
 if %errorlevel% neq 0 (
     echo Python not found. Installing Python...
-    
-    winget install -e --id Python.Python.3.12 --accept-source-agreements --accept-package-agreements
-    
+
+    winget install -e --id Python.Python.3.12 --source winget --accept-source-agreements --accept-package-agreements
+
     echo.
     echo Python installed. Restarting installer...
     echo.
