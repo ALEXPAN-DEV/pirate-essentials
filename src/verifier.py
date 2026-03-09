@@ -15,6 +15,29 @@ def verify_command(command: list[str]) -> bool:
         return False
 
 
+def verify_git() -> bool:
+    possible_paths = [
+        ["git", "--version"],
+        [r"C:\Program Files\Git\cmd\git.exe", "--version"],
+        [r"C:\Program Files\Git\bin\git.exe", "--version"],
+    ]
+
+    for command in possible_paths:
+        try:
+            result = subprocess.run(
+                command,
+                capture_output=True,
+                text=True,
+                shell=False
+            )
+            if result.returncode == 0:
+                return True
+        except Exception:
+            continue
+
+    return False
+
+
 def verify_venv() -> bool:
     return Path(".venv").exists()
 
