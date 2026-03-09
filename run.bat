@@ -11,16 +11,25 @@ if %errorlevel% neq 0 (
     winget install -e --id Python.Python.3.12 --source winget --accept-source-agreements --accept-package-agreements
 
     echo.
-    echo Python installed. Restarting installer...
+    echo Python installed. Please run Pirate Essentials again.
     echo.
-
     pause
-    exit
+    exit /b 0
 )
 
 echo Python detected.
-echo Starting Pirate Essentials...
+echo Installing bootstrap dependencies...
 
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+
+if %errorlevel% neq 0 (
+    echo Failed to install bootstrap dependencies.
+    pause
+    exit /b 1
+)
+
+echo Starting Pirate Essentials...
 python src\main.py
 
 echo.
