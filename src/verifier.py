@@ -1,3 +1,4 @@
+import os
 import subprocess
 from pathlib import Path
 
@@ -16,13 +17,15 @@ def verify_command(command: list[str]) -> bool:
 
 
 def verify_git() -> bool:
-    possible_paths = [
+    possible_commands = [
         ["git", "--version"],
         [r"C:\Program Files\Git\cmd\git.exe", "--version"],
         [r"C:\Program Files\Git\bin\git.exe", "--version"],
+        [r"C:\Program Files (x86)\Git\cmd\git.exe", "--version"],
+        [r"C:\Program Files (x86)\Git\bin\git.exe", "--version"],
     ]
 
-    for command in possible_paths:
+    for command in possible_commands:
         try:
             result = subprocess.run(
                 command,
@@ -33,9 +36,25 @@ def verify_git() -> bool:
             if result.returncode == 0:
                 return True
         except Exception:
-            continue
+            pass
 
     return False
+
+
+def refresh_git_path() -> None:
+    git_paths = [
+        r"C:\Program Files\Git\cmd",
+        r"C:\Program Files\Git\bin",
+        r"C:\Program Files (x86)\Git\cmd",
+        r"C:\Program Files (x86)\Git\bin",
+    ]
+
+    current_path = os.environ.get("PATH", "")
+
+    for path in git_paths:
+        if Path(path).exists() and path.lower() not in current_path.lower():
+            os.environ["PATH"] = current_path + os.pathsep + path
+            current_path = os.environ["PATH"]
 
 
 def verify_venv() -> bool:
@@ -49,12 +68,15 @@ def get_venv_python() -> str:
 def verify_python_package(package_name: str) -> bool:
     try:
         venv_python = get_venv_python()
+
         result = subprocess.run(
             [venv_python, "-m", "pip", "show", package_name],
             capture_output=True,
             text=True,
             shell=False
         )
+
         return result.returncode == 0
+
     except Exception:
         return False

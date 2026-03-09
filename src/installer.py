@@ -6,7 +6,14 @@ from typing import Any
 
 from rich.console import Console
 
-from verifier import get_venv_python, verify_command, verify_python_package, verify_venv
+from verifier import (
+    get_venv_python,
+    refresh_git_path,
+    verify_command,
+    verify_git,
+    verify_python_package,
+    verify_venv,
+)
 
 console = Console()
 
@@ -38,7 +45,12 @@ def print_step(index: int, total: int, name: str, status: str) -> None:
     console.print(f"[cyan][{index}/{total}][/cyan] {name} | {status}")
 
 
-def install_apps(apps: list[dict[str, Any]], logger, start_index: int, total: int) -> tuple[list[str], list[str], int]:
+def install_apps(
+    apps: list[dict[str, Any]],
+    logger,
+    start_index: int,
+    total: int
+) -> tuple[list[str], list[str], int]:
     successful: list[str] = []
     failed: list[str] = []
     current = start_index
@@ -51,7 +63,12 @@ def install_apps(apps: list[dict[str, Any]], logger, start_index: int, total: in
         ok, output = install_command(app["install"])
         logger.info("Install output for %s:\n%s", name, output)
 
-        verified = verify_command(app["verify"])
+        if name.lower() == "git":
+            refresh_git_path()
+            verified = verify_git()
+        else:
+            verified = verify_command(app["verify"])
+
         if ok and verified:
             successful.append(name)
             print_step(current, total, name, "installed")
@@ -73,14 +90,17 @@ def create_venv(logger, index: int, total: int) -> tuple[bool, int]:
     try:
         if not verify_venv():
             venv.create(".venv", with_pip=True)
+
         ok = verify_venv()
         if ok:
             print_step(index, total, ".venv", "created")
             logger.info("Virtual environment ready")
             return True, index + 1
+
         print_step(index, total, ".venv", "failed")
         logger.error("Failed to create virtual environment")
         return False, index + 1
+
     except Exception as exc:
         logger.exception("Error creating virtual environment: %s", exc)
         print_step(index, total, ".venv", "failed")
@@ -105,7 +125,12 @@ def upgrade_venv_pip(logger, index: int, total: int) -> tuple[bool, int]:
     return False, index + 1
 
 
-def install_python_packages(packages: list[str], logger, start_index: int, total: int) -> tuple[list[str], list[str], int]:
+def install_python_packages(
+    packages: list[str],
+    logger,
+    start_index: int,
+    total: int
+) -> tuple[list[str], list[str], int]:
     successful: list[str] = []
     failed: list[str] = []
     current = start_index
