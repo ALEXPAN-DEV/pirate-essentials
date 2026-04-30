@@ -114,7 +114,7 @@ More info → Run anyway
 
 If you have questions or suggestions, open an issue or contact:
 
-https://github.com/ALEXPAN-DEV
+onlinepirates.org@gmail.com
 
 ## Keywords
 
